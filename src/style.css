@@ -1,0 +1,155 @@
+.promise-dialog__mounter,
+.promise-dialog__mounter * {
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+.promise-dialog__layer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, .5);
+  color: #333;
+}
+
+.promise-dialog__dialog {
+  min-width: 240px;
+  max-width: 300px;
+  border-radius: 10px;
+  background-color: #fff;
+  overflow: hidden;
+}
+
+.promise-dialog__body {
+  padding: 20px;
+  text-align: center;
+}
+
+.promise-dialog__title {
+  margin: 0;
+  font-size: inherit;
+  font-weight: 400;
+  overflow-wrap: break-word;
+}
+
+.promise-dialog__content {
+  margin-top: 10px;
+  color: #666;
+  font-size: 14px;
+  overflow-wrap: break-word;
+}
+
+.promise-dialog__actions {
+  border-top: 1px solid #ddd;
+  display: flex;
+}
+
+.promise-dialog__button {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  border: 0 none;
+  cursor: pointer;
+  color: inherit;
+}
+
+.promise-dialog__button+.promise-dialog__button::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 15px;
+  height: 20px;
+  border-left: 1px solid #eee;
+}
+
+.promise-dialog__cancel {
+  color: #777;
+}
+
+.promise-dialog__button:focus {
+  outline: none;
+}
+
+.promise-dialog__toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 160px;
+  max-width: 240px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, .5);
+  border-radius: 10px;
+  color: #fff;
+  font-size: 16px;
+}
+
+.promise-dialog__icon {
+  display: flex;
+  margin-bottom: 10px;
+  width: 48px;
+  height: 48px;
+  background: none no-repeat center / contain;
+}
+
+[data-icon="success"] {
+  background-image: url("data:image/svg+xml,%3Csvg class='icon' viewBox='0 0 1024 1024' xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Cpath d='M963.2 208c-12.8-12.8-32-12.8-44.8 0L396.8 668.8c-12.8 9.6-28.8 9.6-41.6 0l-249.6-192c-12.8-12.8-32-12.8-44.8 0-12.8 12.8-12.8 32 0 44.8L355.2 816c12.8 12.8 32 12.8 44.8 0l563.2-563.2c12.8-12.8 12.8-35.2 0-44.8z' fill='%23fff'/%3E%3C/svg%3E");
+}
+
+[data-icon="warn"] {
+  background-image: url("data:image/svg+xml,%3Csvg class='icon' viewBox='0 0 1024 1024' xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Cpath d='M914.186 910.48H103.977c-23.624 0-42.609-9.432-52.101-25.867-9.493-16.435-8.161-37.601 3.645-58.06l405.105-701.656c11.807-20.46 29.47-32.194 48.456-32.194s36.638 11.735 48.445 32.194l405.115 701.655c11.807 20.46 13.128 41.626 3.635 58.071-9.472 16.425-28.467 25.856-52.09 25.856zM509.082 133.662c-2.878 0-7.998 3.072-12.995 11.714L90.993 847.032c-4.987 8.643-5.08 14.613-3.646 17.101s6.646 5.386 16.63 5.386h810.22c9.983 0 15.185-2.898 16.63-5.386 1.433-2.478 1.34-8.458-3.646-17.1L522.056 145.366c-4.977-8.632-10.097-11.704-12.974-11.704z' fill='%23fff'/%3E%3Cpath d='M509.082 675.84a25.672 25.672 0 0 1-25.6-25.6V353.28c0-14.08 11.52-25.6 25.6-25.6s25.6 11.52 25.6 25.6v296.96c0 14.08-11.52 25.6-25.6 25.6zM483.48199999999997 732.16a25.6 25.6 0 1 0 51.2 0 25.6 25.6 0 1 0-51.2 0z' fill='%23fff'/%3E%3C/svg%3E");
+}
+
+.promise-dialog__loading {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 160px;
+  padding: 60px 20px 30px;
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, .5);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes circle {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.promise-dialog__loading::before {
+  content: "";
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  margin-left: -15px;
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(255, 255, 255, .8);
+  border-radius: 50%;
+  border-left-color: transparent;
+  animation: circle .8s infinite linear;
+}
+
+.promise-dialog__loading .promise-dialog__title {
+  margin-top: 10px;
+}
