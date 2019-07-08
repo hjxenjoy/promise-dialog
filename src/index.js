@@ -12,7 +12,7 @@ function $class(...classNames) {
   return classNames.filter(Boolean).map(clz => `promise-dialog__${clz}`).join(' ')
 }
 
-export function alert({ title = '', content = '', buttonText = 'OK' }) {
+export function alert({ title = '', content = '', buttonText = 'OK', zIndex }) {
   const mounter = $e('div', $class('mounter'))
   const layer = $e('div', $class('layer'))
   const dialog = $e('div', $class('dialog'))
@@ -32,6 +32,9 @@ export function alert({ title = '', content = '', buttonText = 'OK' }) {
   actions.appendChild(button)
   dialog.appendChild(body)
   dialog.appendChild(actions)
+  if (zIndex) {
+    layer.style.zIndex = zIndex
+  }
   layer.appendChild(dialog)
   mounter.appendChild(layer)
 
@@ -45,7 +48,7 @@ export function alert({ title = '', content = '', buttonText = 'OK' }) {
   })
 }
 
-export function confirm({ title = '', content = '', leftText = 'Cancel', rightText = 'OK', leftCancel = true }) {
+export function confirm({ title = '', content = '', leftText = 'Cancel', rightText = 'OK', leftCancel = true, zIndex }) {
   const mounter = $e('div', $class('mounter'))
   const layer = $e('div', $class('layer'))
   const dialog = $e('div', $class('dialog'))
@@ -68,6 +71,9 @@ export function confirm({ title = '', content = '', leftText = 'Cancel', rightTe
   actions.appendChild(rightButton)
   dialog.appendChild(body)
   dialog.appendChild(actions)
+  if (zIndex) {
+    layer.style.zIndex = zIndex
+  }
   layer.appendChild(dialog)
   mounter.appendChild(layer)
 
@@ -94,13 +100,16 @@ const IconTypes = {
 const shareMounter = $e('div', $class('mounter'))
 let toastTimer
 
-export function toast({ title = '', iconType, duration = 2000 }) {
+export function toast({ title = '', iconType, duration = 2000, zIndex }) {
   if (shareMounter.parentNode === document.body) {
     shareMounter.innerHTML = ''
     clearTimeout(toastTimer)
   }
 
   const toaster = $e('div', $class('toast'))
+  if (zIndex) {
+    toaster.style.zIndex = zIndex
+  }
   const titler = $e('h3', $class('title'))
 
   if (iconType && IconTypes[iconType]) {
@@ -125,13 +134,16 @@ export function toast({ title = '', iconType, duration = 2000 }) {
   })
 }
 
-export function loading({ title = '' }) {
+export function loading({ title = '', zIndex }) {
   if (shareMounter.parentNode === document.body) {
     shareMounter.innerHTML = ''
     clearTimeout(toastTimer)
   }
 
   const loading = $e('div', $class('loading'))
+  if (zIndex) {
+    loading.style.zIndex = zIndex
+  }
 
   if (title) {
     const titler = $e('h3', $class('title'))
