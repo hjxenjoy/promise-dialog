@@ -1,5 +1,5 @@
 const path = require('path')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+// const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 // https://itnext.io/how-to-package-your-react-component-for-distribution-via-npm-d32d4bf71b4f
 module.exports = {
@@ -26,20 +26,20 @@ module.exports = {
       {
         test: /\.css$/,
         use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-          },
+          // {
+          //   loader: MiniCssExtractPlugin.loader,
+          // },
           'css-loader',
           'postcss-loader',
         ],
       },
     ],
   },
-  plugins: [
-    new MiniCssExtractPlugin({
-      filename: 'style.css',
-    }),
-  ],
+  // plugins: [
+  //   new MiniCssExtractPlugin({
+  //     filename: 'style.css',
+  //   }),
+  // ],
   optimization: {
     // We no not want to minimize our code.
     minimize: false,
