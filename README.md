@@ -10,7 +10,7 @@ npm start
 
 ## Installation
 
-Using [npm](https://www.npmjs.com/package/react-text-media-editor):
+Using [npm](https://www.npmjs.com/package/promise-dialog):
 
 ```sh
 npm install --save promise-dialog
