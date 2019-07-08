@@ -1,6 +1,6 @@
-# React Text Media Editor
+# Promise Dialog
 
-Simple React Web Editor Only Support Text and Medias
+Promise Based Dialog
 
 ## Demo
 
@@ -13,7 +13,7 @@ npm start
 Using [npm](https://www.npmjs.com/package/react-text-media-editor):
 
 ```sh
-npm install --save react-text-media-editor react-sortable-hoc
+npm install --save promise-dialog
 ```
 
 ## Usage
@@ -21,52 +21,35 @@ npm install --save react-text-media-editor react-sortable-hoc
 Basic Example
 
 ```js
-import React, { useState } from 'react'
-import ReactDOM from 'react-dom'
+import * as pd from 'promise-dialog'
 
-import RtmEditor from 'react-text-media-editor'
-import 'react-text-media-editor/dist/style.css'
-
-const IMAGE = 'https://picsum.photos/500/150'
-
-const InitialValue = [
-  { type: 'TEXT', raw: 'React Text Media Editor Example' },
-  { type: 'IMAGE', url: IMAGE, name: 'Pic.png', width: 500, height: 150 },
-]
-
-function Example() {
-  const [value, setValue] = useState(InitialValue)
-
-  function updateValue(nextValue) {
-    console.log(nextValue)
-    // setValue(nextValue)
-  }
-
-  function uploadImages(files, callback) {
-    // put your upload function here
-    setTimeout(() => {
-      callback(
-        files.map(file => ({
-          status: 'done',
-          url: '', // 'https://your.domain.com/your/image/url',
-          _id: file._id,
-        }))
-      )
-    }, 1000)
-  }
-
-  return (
-    <div className="example">
-      <h1>React Text Media Editor Example</h1>
-      <RtmEditor
-        value={value}
-        onChange={updateValue}
-        uploadImages={uploadImages}
-        placeholder="Please Input Your Idea"
-      />
-    </div>
-  )
+async function testAlert() {
+  await pd.alert({
+    title: 'Hello Alert',
+    content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+    buttonText: 'Sure!',
+  })
+  console.log('alert clicked')
 }
 
-ReactDOM.render(<Example />, document.getElementById('root'))
+async function testConfirm() {
+  await pd.confirm({
+    title: 'Hello Confirm',
+    content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+  })
+  console.log('confirm ok')
+}
+
+async function testToast() {
+  await pd.toast({ title: 'Hello Toast', iconType: 'warn' })
+  console.log('toast disappear')
+}
+
+function testLoading() {
+  pd.loading({ title: 'Loading...' })
+}
+
+function testLoaded() {
+  pd.loaded()
+}
 ```
