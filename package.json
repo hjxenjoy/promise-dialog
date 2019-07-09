@@ -14,7 +14,11 @@
     "type": "git",
     "url": "git+https://github.com/hjxenjoy/promise-dialog.git"
   },
-  "keywords": ["dialog", "toast", "promise"],
+  "keywords": [
+    "dialog",
+    "toast",
+    "promise"
+  ],
   "author": "Jinxin Hu <hjxenjoy@gmail.com> (https://hujin.xin)",
   "license": "MIT",
   "bugs": {
@@ -47,7 +51,7 @@
     "cz-conventional-changelog": "^2.1.0",
     "error-overlay-webpack-plugin": "^0.4.0",
     "eslint": "^5.16.0",
-    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-airbnb-base": "^13.2.0",
     "eslint-config-prettier": "^5.0.0",
     "eslint-plugin-html": "^5.0.5",
     "eslint-plugin-import": "^2.17.3",

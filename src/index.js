@@ -9,7 +9,10 @@ function $e(tagName, className) {
 }
 
 function $class(...classNames) {
-  return classNames.filter(Boolean).map(clz => `promise-dialog__${clz}`).join(' ')
+  return classNames
+    .filter(Boolean)
+    .map(clz => `promise-dialog__${clz}`)
+    .join(' ')
 }
 
 export function alert({ title = '', content = '', buttonText = 'OK', zIndex }) {
@@ -40,15 +43,22 @@ export function alert({ title = '', content = '', buttonText = 'OK', zIndex }) {
 
   document.body.appendChild(mounter)
 
-  return new Promise(function (resolve) {
-    button.addEventListener('click', function () {
+  return new Promise(function alertPromise(resolve) {
+    button.addEventListener('click', function removeAlert() {
       document.body.removeChild(mounter)
       resolve()
     })
   })
 }
 
-export function confirm({ title = '', content = '', leftText = 'Cancel', rightText = 'OK', leftCancel = true, zIndex }) {
+export function confirm({
+  title = '',
+  content = '',
+  leftText = 'Cancel',
+  rightText = 'OK',
+  leftCancel = true,
+  zIndex,
+}) {
   const mounter = $e('div', $class('mounter'))
   const layer = $e('div', $class('layer'))
   const dialog = $e('div', $class('dialog'))
@@ -79,15 +89,23 @@ export function confirm({ title = '', content = '', leftText = 'Cancel', rightTe
 
   document.body.appendChild(mounter)
 
-  return new Promise(function (resolve, reject) {
-    leftButton.addEventListener('click', function () {
+  return new Promise(function confirmPromise(resolve, reject) {
+    leftButton.addEventListener('click', function leftClick() {
       document.body.removeChild(mounter)
-      leftCancel ? reject() : resolve()
+      if (leftCancel) {
+        reject()
+      } else {
+        resolve()
+      }
     })
 
-    rightButton.addEventListener('click', function () {
+    rightButton.addEventListener('click', function rightClick() {
       document.body.removeChild(mounter)
-      leftCancel ? resolve() : reject()
+      if (leftCancel) {
+        resolve()
+      } else {
+        reject()
+      }
     })
   })
 }
@@ -124,7 +142,7 @@ export function toast({ title = '', iconType, duration = 2000, zIndex }) {
 
   document.body.appendChild(shareMounter)
 
-  return new Promise(function (resolve) {
+  return new Promise(function toastPromise(resolve) {
     toastTimer = setTimeout(() => {
       if (shareMounter.parentNode === document.body) {
         document.body.removeChild(shareMounter)
@@ -140,18 +158,18 @@ export function loading({ title = '', zIndex }) {
     clearTimeout(toastTimer)
   }
 
-  const loading = $e('div', $class('loading'))
+  const loader = $e('div', $class('loading'))
   if (zIndex) {
-    loading.style.zIndex = zIndex
+    loader.style.zIndex = zIndex
   }
 
   if (title) {
     const titler = $e('h3', $class('title'))
     titler.textContent = title
-    loading.appendChild(titler)
+    loader.appendChild(titler)
   }
 
-  shareMounter.appendChild(loading)
+  shareMounter.appendChild(loader)
   document.body.appendChild(shareMounter)
 }
 

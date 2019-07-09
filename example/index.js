@@ -1,21 +1,31 @@
 import './main.css'
 
-const example = document.getElementById('example')
-
 import * as pd from '../src'
 
+const example = document.getElementById('example')
+
 async function testAlert() {
-  await pd.alert({ title: 'Hello Alert', content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.', buttonText: 'Sure!' })
+  await pd.alert({
+    title: 'Hello Alert',
+    content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+    buttonText: 'Sure!',
+  })
+  // eslint-disable-next-line
   console.log('alert clicked')
 }
 
 async function testConfirm() {
-  await pd.confirm({ title: 'Hello Confirm', content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.' })
+  await pd.confirm({
+    title: 'Hello Confirm',
+    content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+  })
+  // eslint-disable-next-line
   console.log('confirm ok')
 }
 
 async function testToast() {
-  await pd.toast({ title: 'Hello Toast', iconType: 'warn' })
+  await pd.toast({ title: 'Hello Toast', iconType: 'success' })
+  // eslint-disable-next-line
   console.log('toast disappear')
 }
 
@@ -27,10 +37,10 @@ function testLoaded() {
   pd.loaded()
 }
 
-example.addEventListener('click', function (event) {
+example.addEventListener('click', event => {
   const { func } = event.target.dataset
 
-  switch(func) {
+  switch (func) {
     case 'alert':
       testAlert()
       break
