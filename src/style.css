@@ -37,6 +37,8 @@
   font-size: inherit;
   font-weight: 400;
   overflow-wrap: break-word;
+  text-align: center;
+  line-height: 1.5;
 }
 
 .promise-dialog__content {
@@ -44,6 +46,8 @@
   color: #666;
   font-size: 14px;
   overflow-wrap: break-word;
+  text-align: center;
+  line-height: 1.5;
 }
 
 .promise-dialog__actions {
