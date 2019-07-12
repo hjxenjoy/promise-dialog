@@ -152,20 +152,34 @@ export function toast({ title = '', iconType, duration = 2000, zIndex }) {
   })
 }
 
-export function loading({ title = '', zIndex }) {
+export function loading(config) {
+  let text
+  let z
+
+  if (typeof config === 'object') {
+    if ('title' in config) {
+      text = config.title
+    }
+    if ('zIndex' in config) {
+      z = config.zIndex
+    }
+  } else if (typeof config === 'string') {
+    text = config
+  }
+
   if (shareMounter.parentNode === document.body) {
     shareMounter.innerHTML = ''
     clearTimeout(toastTimer)
   }
 
   const loader = $e('div', $class('loading'))
-  if (zIndex) {
-    loader.style.zIndex = zIndex
+  if (z) {
+    loader.style.zIndex = z
   }
 
-  if (title) {
+  if (text) {
     const titler = $e('h3', $class('title'))
-    titler.textContent = title
+    titler.textContent = text
     loader.appendChild(titler)
   }
 
