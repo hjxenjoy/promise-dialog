@@ -27,6 +27,9 @@
     "url": "https://github.com/hjxenjoy/promise-dialog/issues"
   },
   "homepage": "https://github.com/hjxenjoy/promise-dialog#readme",
+  "github": {
+    "release": true
+  },
   "lint-staged": {
     "src/**/*.{js,ts,json}": [
       "eslint --fix",
