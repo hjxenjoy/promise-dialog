@@ -66,6 +66,7 @@
   cursor: pointer;
   color: inherit;
   font-family: inherit;
+  appearance: none;
 }
 
 .promise-dialog__button+.promise-dialog__button::before {
