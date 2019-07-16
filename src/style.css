@@ -64,6 +64,7 @@
   height: 50px;
   border: 0 none;
   cursor: pointer;
+  background-color: transparent;
   color: inherit;
   font-family: inherit;
   appearance: none;
