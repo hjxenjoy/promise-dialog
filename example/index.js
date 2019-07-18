@@ -11,7 +11,7 @@ async function testAlert() {
     html: `<h3>Heading 3</h3><p>paragraph</p><button>click button</button><script type="text/javascript">alert('script')</script>`,
     buttonText: 'Sure!',
   })
-  // eslint-disable-next-line
+  // eslint-disable-next-line no-console
   console.log('alert clicked')
 }
 
@@ -21,7 +21,7 @@ async function testConfirm() {
     content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
     html: `<h3>Heading 3</h3><p>paragraph</p><button>click button</button><script type="text/javascript">alert('script')</script>`,
   })
-  // eslint-disable-next-line
+  // eslint-disable-next-line no-console
   console.log('confirm ok')
 }
 
@@ -30,13 +30,13 @@ async function testPrompt() {
     title: 'Hello Prompt',
     placeholder: 'Please typo something...',
   })
-  // eslint-disable-next-line
+  // eslint-disable-next-line no-console
   console.log(value)
 }
 
 async function testToast() {
   await pd.toast({ title: 'Hello Toast', iconType: 'success' })
-  // eslint-disable-next-line
+  // eslint-disable-next-line no-console
   console.log('toast disappear')
 }
 

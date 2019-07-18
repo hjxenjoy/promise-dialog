@@ -171,6 +171,17 @@ export function prompt({
 
   document.body.appendChild(mounter)
 
+  textarea.focus()
+
+  textarea.addEventListener('blur', function scrollBack() {
+    if (typeof window.scrollTo === 'function') {
+      window.scrollTo(0, 0)
+    } else {
+      window.scrollLeft = 0
+      window.scrollTop = 0
+    }
+  })
+
   return new Promise(function confirmPromise(resolve, reject) {
     leftButton.addEventListener('click', function leftClick() {
       if (leftCancel) {
