@@ -1,6 +1,7 @@
 export interface AlertConfig {
   title?: string
   content?: string
+  html?: string
   buttonText?: string
   zIndex?: number
 }
@@ -8,6 +9,16 @@ export interface AlertConfig {
 export interface ConfirmConfig {
   title?: string
   content?: string
+  html?: string
+  leftText?: string
+  rightText?: string
+  leftCancel?: boolean
+  zIndex?: number
+}
+
+export interface PromptConfig {
+  title?: string
+  placeholder?: string
   leftText?: string
   rightText?: string
   leftCancel?: boolean
@@ -28,7 +39,8 @@ export interface LoadingConfig {
 declare module 'promise-dialog' {
   function alert(config: AlertConfig): Promise<void>
   function confirm(config: ConfirmConfig): Promise<void>
+  function prompt(config: PromptConfig): Promise<string>
   function toast(config: ToastConfig): Promise<void>
-  function loading(config: LoadingConfig): void
+  function loading(config: LoadingConfig | string): void
   function loaded(): void
 }

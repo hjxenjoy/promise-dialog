@@ -50,6 +50,33 @@
   line-height: 1.5;
 }
 
+.promise-dialog__html {
+  margin-top: 10px;
+  font-size: 14px;
+  overflow-wrap: break-word;
+}
+
+.promise-dialog__control {
+  margin-top: 10px;
+  min-width: 256px;
+}
+
+.promise-dialog__textarea {
+  display: block;
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 2px;
+  appearance: none;
+  font-size: inherit;
+  color: inherit;
+  padding: 5px 10px;
+  resize: none;
+}
+
+.promise-dialog__textarea:focus {
+  outline: none;
+}
+
 .promise-dialog__actions {
   border-top: 1px solid #ddd;
   display: flex;

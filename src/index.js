@@ -15,22 +15,32 @@ function $class(...classNames) {
     .join(' ')
 }
 
-export function alert({ title = '', content = '', buttonText = 'OK', zIndex }) {
+export function alert({ title = '', content = '', html = '', buttonText = 'OK', zIndex }) {
   const mounter = $e('div', $class('mounter'))
   const layer = $e('div', $class('layer'))
   const dialog = $e('div', $class('dialog'))
   const body = $e('div', $class('body'))
   const titler = $e('h3', $class('title'))
   const contenter = $e('div', $class('content'))
+  const htmlNode = $e('div', $class('html'))
   const actions = $e('div', $class('actions'))
   const button = $e('button', $class('button'))
   button.textContent = buttonText
 
-  titler.textContent = title
-  body.appendChild(titler)
+  if (title) {
+    titler.textContent = title
+    body.appendChild(titler)
+  }
   if (content) {
     contenter.textContent = content
     body.appendChild(contenter)
+  }
+
+  // https://stackoverflow.com/questions/6659351/removing-all-script-tags-from-html-with-js-regular-expression
+  // Note that at present, browsers will not execute the script if inserted using the innerHTML property, and likely never will especially as the element is not added to the document.
+  if (html) {
+    htmlNode.innerHTML = html
+    body.appendChild(htmlNode)
   }
   actions.appendChild(button)
   dialog.appendChild(body)
@@ -54,6 +64,7 @@ export function alert({ title = '', content = '', buttonText = 'OK', zIndex }) {
 export function confirm({
   title = '',
   content = '',
+  html = '',
   leftText = 'Cancel',
   rightText = 'OK',
   leftCancel = true,
@@ -65,17 +76,24 @@ export function confirm({
   const body = $e('div', $class('body'))
   const titler = $e('h3', $class('title'))
   const contenter = $e('div', $class('content'))
+  const htmlNode = $e('div', $class('html'))
   const actions = $e('div', $class('actions'))
   const leftButton = $e('button', $class('button', leftCancel ? 'cancel' : ''))
   const rightButton = $e('button', $class('button', leftCancel ? '' : 'cancel'))
   leftButton.textContent = leftText
   rightButton.textContent = rightText
 
-  titler.textContent = title
-  body.appendChild(titler)
+  if (title) {
+    titler.textContent = title
+    body.appendChild(titler)
+  }
   if (content) {
     contenter.textContent = content
     body.appendChild(contenter)
+  }
+  if (html) {
+    htmlNode.innerHTML = html
+    body.appendChild(htmlNode)
   }
   actions.appendChild(leftButton)
   actions.appendChild(rightButton)
@@ -106,6 +124,70 @@ export function confirm({
       } else {
         reject()
       }
+    })
+  })
+}
+
+export function prompt({
+  title = '',
+  placeholder = '',
+  leftText = 'Cancel',
+  rightText = 'OK',
+  leftCancel = true,
+  zIndex,
+}) {
+  const mounter = $e('div', $class('mounter'))
+  const layer = $e('div', $class('layer'))
+  const dialog = $e('div', $class('dialog'))
+  const body = $e('div', $class('body'))
+  const titler = $e('h3', $class('title'))
+  const controller = $e('div', $class('control'))
+  const textarea = $e('textarea', $class('textarea'))
+  const actions = $e('div', $class('actions'))
+  const leftButton = $e('button', $class('button', leftCancel ? 'cancel' : ''))
+  const rightButton = $e('button', $class('button', leftCancel ? '' : 'cancel'))
+  leftButton.textContent = leftText
+  rightButton.textContent = rightText
+
+  if (title) {
+    titler.textContent = title
+    body.appendChild(titler)
+  }
+
+  textarea.placeholder = placeholder || title || ''
+  textarea.rows = 3
+  controller.appendChild(textarea)
+  body.appendChild(controller)
+
+  actions.appendChild(leftButton)
+  actions.appendChild(rightButton)
+  dialog.appendChild(body)
+  dialog.appendChild(actions)
+  if (zIndex) {
+    layer.style.zIndex = zIndex
+  }
+  layer.appendChild(dialog)
+  mounter.appendChild(layer)
+
+  document.body.appendChild(mounter)
+
+  return new Promise(function confirmPromise(resolve, reject) {
+    leftButton.addEventListener('click', function leftClick() {
+      if (leftCancel) {
+        reject()
+      } else {
+        resolve(textarea.value)
+      }
+      document.body.removeChild(mounter)
+    })
+
+    rightButton.addEventListener('click', function rightClick() {
+      if (leftCancel) {
+        resolve(textarea.value)
+      } else {
+        reject()
+      }
+      document.body.removeChild(mounter)
     })
   })
 }
