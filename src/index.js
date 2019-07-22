@@ -211,12 +211,18 @@ const IconTypes = {
 const shareMounter = $e('div', $class('mounter'))
 let toastTimer
 
-export function toast({ title = '', iconType, duration = 2000, zIndex }) {
+function clear() {
   if (shareMounter.parentNode === document.body) {
     clearTimeout(toastTimer)
     document.body.removeChild(shareMounter)
-    shareMounter.removeChild(shareMounter.firstChild)
+    if (shareMounter.firstChild) {
+      shareMounter.removeChild(shareMounter.firstChild)
+    }
   }
+}
+
+export function toast({ title = '', iconType, duration = 2000, zIndex }) {
+  clear()
 
   const toaster = $e('div', $class('toast'))
   if (zIndex) {
@@ -238,11 +244,8 @@ export function toast({ title = '', iconType, duration = 2000, zIndex }) {
 
   return new Promise(function toastPromise(resolve) {
     toastTimer = setTimeout(() => {
-      if (shareMounter.parentNode === document.body) {
-        document.body.removeChild(shareMounter)
-        shareMounter.removeChild(shareMounter.firstChild)
-        resolve()
-      }
+      resolve()
+      clear()
     }, duration)
   })
 }
@@ -262,11 +265,7 @@ export function loading(config) {
     text = config
   }
 
-  if (shareMounter.parentNode === document.body) {
-    clearTimeout(toastTimer)
-    document.body.removeChild(shareMounter)
-    shareMounter.removeChild(shareMounter.firstChild)
-  }
+  clear()
 
   const loader = $e('div', $class('loading'))
   if (z) {
@@ -284,11 +283,5 @@ export function loading(config) {
 }
 
 export function loaded() {
-  if (shareMounter.parentNode === document.body) {
-    clearTimeout(toastTimer)
-    document.body.removeChild(shareMounter)
-    shareMounter.removeChild(shareMounter.firstChild)
-  }
-
-  document.body.appendChild(shareMounter)
+  clear()
 }
