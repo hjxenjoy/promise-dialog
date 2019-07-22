@@ -1,6 +1,6 @@
 {
   "name": "promise-dialog",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Promise Based Dialog",
   "main": "dist/index.js",
   "typings": "types/index.d.ts",
