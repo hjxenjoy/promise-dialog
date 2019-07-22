@@ -213,8 +213,9 @@ let toastTimer
 
 export function toast({ title = '', iconType, duration = 2000, zIndex }) {
   if (shareMounter.parentNode === document.body) {
-    shareMounter.innerHTML = ''
     clearTimeout(toastTimer)
+    document.body.removeChild(shareMounter)
+    shareMounter.removeChild(shareMounter.firstChild)
   }
 
   const toaster = $e('div', $class('toast'))
@@ -239,6 +240,7 @@ export function toast({ title = '', iconType, duration = 2000, zIndex }) {
     toastTimer = setTimeout(() => {
       if (shareMounter.parentNode === document.body) {
         document.body.removeChild(shareMounter)
+        shareMounter.removeChild(shareMounter.firstChild)
         resolve()
       }
     }, duration)
@@ -261,8 +263,9 @@ export function loading(config) {
   }
 
   if (shareMounter.parentNode === document.body) {
-    shareMounter.innerHTML = ''
     clearTimeout(toastTimer)
+    document.body.removeChild(shareMounter)
+    shareMounter.removeChild(shareMounter.firstChild)
   }
 
   const loader = $e('div', $class('loading'))
@@ -282,8 +285,9 @@ export function loading(config) {
 
 export function loaded() {
   if (shareMounter.parentNode === document.body) {
-    shareMounter.innerHTML = ''
     clearTimeout(toastTimer)
+    document.body.removeChild(shareMounter)
+    shareMounter.removeChild(shareMounter.firstChild)
   }
 
   document.body.appendChild(shareMounter)
