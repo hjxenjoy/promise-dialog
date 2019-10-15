@@ -29,6 +29,7 @@ async function testPrompt() {
   const value = await pd.prompt({
     title: 'Hello Prompt',
     placeholder: 'Please typo something...',
+    defaultValue: 'Default Values...',
   })
   // eslint-disable-next-line no-console
   console.log(value)

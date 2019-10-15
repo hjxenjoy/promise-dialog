@@ -131,6 +131,7 @@ export function confirm({
 export function prompt({
   title = '',
   placeholder = '',
+  defaultValue = '',
   leftText = 'Cancel',
   rightText = 'OK',
   leftCancel = true,
@@ -171,6 +172,7 @@ export function prompt({
 
   document.body.appendChild(mounter)
 
+  textarea.value = defaultValue
   textarea.focus()
 
   textarea.addEventListener('blur', function scrollBack() {

@@ -19,6 +19,7 @@ export interface ConfirmConfig {
 export interface PromptConfig {
   title?: string
   placeholder?: string
+  defaultValue?: string
   leftText?: string
   rightText?: string
   leftCancel?: boolean
