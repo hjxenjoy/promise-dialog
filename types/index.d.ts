@@ -30,6 +30,7 @@ export interface ToastConfig {
   title?: string
   duration?: number
   zIndex?: number
+  iconType?: 'success' | 'warn'
 }
 
 export interface LoadingConfig {
