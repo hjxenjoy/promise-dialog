@@ -4,41 +4,45 @@ import * as pd from '../src'
 
 const example = document.getElementById('example')
 
-async function testAlert() {
-  await pd.alert({
-    title: 'Hello Alert',
+pd.setConfig({ okText: 'Sure', cancelText: 'Dismiss' })
+
+function testAlert(theme) {
+  pd.alert({
+    theme,
+    title: 'Hello Dark Mode Alert',
     content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
     html: `<h3>Heading 3</h3><p>paragraph</p><button>click button</button><script type="text/javascript">alert('script')</script>`,
     buttonText: 'Sure!',
+  }).then(() => {
+    console.log('alert clicked')
   })
-  // eslint-disable-next-line no-console
-  console.log('alert clicked')
 }
 
-async function testConfirm() {
-  await pd.confirm({
+function testConfirm() {
+  pd.confirm({
     title: 'Hello Confirm',
     content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
     html: `<h3>Heading 3</h3><p>paragraph</p><button>click button</button><script type="text/javascript">alert('script')</script>`,
+  }).then(() => {
+    console.log('confirm ok')
   })
-  // eslint-disable-next-line no-console
-  console.log('confirm ok')
 }
 
-async function testPrompt() {
-  const value = await pd.prompt({
+function testPrompt() {
+  pd.prompt({
     title: 'Hello Prompt',
     placeholder: 'Please typo something...',
     defaultValue: 'Default Values...',
+    onBlur: pd.scrollBack,
+  }).then(value => {
+    console.log(value)
   })
-  // eslint-disable-next-line no-console
-  console.log(value)
 }
 
-async function testToast() {
-  await pd.toast({ title: 'Hello Toast', iconType: 'success' })
-  // eslint-disable-next-line no-console
-  console.log('toast disappear')
+function testToast() {
+  pd.toast({ title: 'Hello Toast', iconType: 'success' }).then(() => {
+    console.log('toast disappear')
+  })
 }
 
 function testLoading() {
@@ -55,6 +59,9 @@ example.addEventListener('click', event => {
   switch (func) {
     case 'alert':
       testAlert()
+      break
+    case 'alert2':
+      testAlert('dark')
       break
     case 'confirm':
       testConfirm()

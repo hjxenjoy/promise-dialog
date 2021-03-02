@@ -3,13 +3,15 @@
   "plugins": ["prettier"],
   "parser": "babel-eslint",
   "rules": {
-    "no-underscore-dangle": 0,
+    "no-underscore-dangle": "off",
     "no-unused-vars": ["warn"],
     "import/imports-first": ["error", "absolute-first"],
     "import/newline-after-import": "error",
-    "import/prefer-default-export": 0,
+    "import/prefer-default-export": "off",
     "prettier/prettier": "error",
-    "linebreak-style": ["off", "windows"]
+    "linebreak-style": ["off", "windows"],
+    "no-restricted-syntax": "off",
+    "no-console": "off"
   },
   "globals": {
     "window": true,

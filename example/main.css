@@ -22,9 +22,8 @@ body {
 }
 
 .button {
-  margin: 0 auto;
   display: block;
-  margin-bottom: 20px;
+  margin: 0 auto 20px;
   padding: 10px 20px;
   border: 1px solid #396;
   border-radius: 40px;
@@ -33,6 +32,16 @@ body {
   cursor: pointer;
   appearance: none;
   background-color: #fff;
+  font-weight: 500;
+}
+
+.button::first-letter {
+  text-transform: uppercase;
+}
+
+.button:hover {
+  background-color: #396;
+  color: #fff;
 }
 
 .button:focus {
@@ -43,4 +52,17 @@ body {
 .button:active {
   background-color: #396;
   color: #fff;
+}
+
+.promise-dialog__dark .promise-dialog__dialog {
+  background-color: #333;
+  color: #EEE;
+}
+
+.promise-dialog__dark .promise-dialog__actions {
+  border-top-color: #999;
+}
+
+.promise-dialog__dark .promise-dialog__content {
+  color: #ccc;
 }

@@ -1,5 +1,37 @@
 import './style.css'
 
+const DefaultConfig = {
+  okText: 'OK',
+  cancelText: 'Cancel',
+}
+
+if (!window.__pd_config || !('okText' in window)) {
+  window.__pd_config = {
+    ...DefaultConfig,
+  }
+}
+
+export function setConfig({ okText, cancelText }) {
+  if (!('__pd_config' in window)) {
+    window.__pd_config = { ...DefaultConfig }
+  }
+  if (okText) {
+    window.__pd_config.okText = okText
+  }
+  if (cancelText) {
+    window.__pd_config.cancelText = cancelText
+  }
+}
+
+export function scrollBack(x = 0, y = 0) {
+  if (typeof window.scrollTo === 'function') {
+    window.scrollTo(x, y)
+  } else {
+    window.scrollLeft = x
+    window.scrollTop = y
+  }
+}
+
 function $e(tagName, className) {
   const element = document.createElement(tagName)
   if (className) {
@@ -15,42 +47,101 @@ function $class(...classNames) {
     .join(' ')
 }
 
-export function alert({ title = '', content = '', html = '', buttonText = 'OK', zIndex }) {
-  const mounter = $e('div', $class('mounter'))
-  const layer = $e('div', $class('layer'))
-  const dialog = $e('div', $class('dialog'))
-  const body = $e('div', $class('body'))
-  const titler = $e('h3', $class('title'))
-  const contenter = $e('div', $class('content'))
-  const htmlNode = $e('div', $class('html'))
-  const actions = $e('div', $class('actions'))
-  const button = $e('button', $class('button'))
-  button.textContent = buttonText
+function create(tagName, classes, props, children) {
+  const element = $e(tagName, $class(...classes))
+  if (props) {
+    for (const key in props) {
+      if (Object.prototype.hasOwnProperty.call(props, key) && typeof props[key] !== 'undefined') {
+        element[key] = props[key]
+      }
+    }
+  }
 
+  if (children) {
+    for (const child of children) {
+      if (child) {
+        element.appendChild(child)
+      }
+    }
+  }
+
+  return element
+}
+
+function createActions(leftText, rightText, leftCancel) {
+  const leftButton = create('button', ['button', leftCancel ? 'cancel' : ''], {
+    textContent: leftText,
+  })
+  const rightButton = create('button', ['button', leftCancel ? '' : 'cancel'], {
+    textContent: rightText,
+  })
+  return [leftButton, rightButton]
+}
+
+function createHeader({ title, content, html }) {
+  const header = []
   if (title) {
-    titler.textContent = title
-    body.appendChild(titler)
+    header.push(
+      create('h3', ['title'], {
+        textContent: title,
+      })
+    )
   }
   if (content) {
-    contenter.textContent = content
-    body.appendChild(contenter)
+    header.push(
+      create('div', ['content'], {
+        textContent: content,
+      })
+    )
   }
-
-  // https://stackoverflow.com/questions/6659351/removing-all-script-tags-from-html-with-js-regular-expression
-  // Note that at present, browsers will not execute the script if inserted using the innerHTML property, and likely never will especially as the element is not added to the document.
   if (html) {
-    htmlNode.innerHTML = html
-    body.appendChild(htmlNode)
+    // https://stackoverflow.com/questions/6659351/removing-all-script-tags-from-html-with-js-regular-expression
+    // Note that at present, browsers will not execute the script if inserted using the innerHTML property, and likely never will especially as the element is not added to the document.
+    header.push(
+      create('div', ['html'], {
+        innerHTML: html,
+      })
+    )
   }
-  actions.appendChild(button)
-  dialog.appendChild(body)
-  dialog.appendChild(actions)
-  if (zIndex) {
-    layer.style.zIndex = zIndex
-  }
-  layer.appendChild(dialog)
-  mounter.appendChild(layer)
+  return header
+}
 
+function createWrapper(theme, header, actions, zIndex) {
+  return create('div', ['mounter', theme], null, [
+    create(
+      'div',
+      ['layer'],
+      {
+        style: zIndex
+          ? {
+              zIndex,
+            }
+          : undefined,
+      },
+      [
+        create('div', ['layer'], null, [
+          create('div', ['dialog'], null, [
+            create('div', ['body'], null, header),
+            create('div', ['actions'], null, actions),
+          ]),
+        ]),
+      ]
+    ),
+  ])
+}
+
+export function alert({
+  theme,
+  title = '',
+  content = '',
+  html = '',
+  buttonText = window.__pd_config.okText,
+  zIndex,
+}) {
+  const button = create('button', ['button'], {
+    textContent: buttonText,
+  })
+  const mounter = createWrapper(theme, createHeader({ title, content, html }), [button], zIndex)
   document.body.appendChild(mounter)
 
   return new Promise(function alertPromise(resolve) {
@@ -62,49 +153,23 @@ export function alert({ title = '', content = '', html = '', buttonText = 'OK', 
 }
 
 export function confirm({
+  theme,
   title = '',
   content = '',
   html = '',
-  leftText = 'Cancel',
-  rightText = 'OK',
+  leftText = window.__pd_config.cancelText,
+  rightText = window.__pd_config.okText,
   leftCancel = true,
   zIndex,
 }) {
-  const mounter = $e('div', $class('mounter'))
-  const layer = $e('div', $class('layer'))
-  const dialog = $e('div', $class('dialog'))
-  const body = $e('div', $class('body'))
-  const titler = $e('h3', $class('title'))
-  const contenter = $e('div', $class('content'))
-  const htmlNode = $e('div', $class('html'))
-  const actions = $e('div', $class('actions'))
-  const leftButton = $e('button', $class('button', leftCancel ? 'cancel' : ''))
-  const rightButton = $e('button', $class('button', leftCancel ? '' : 'cancel'))
-  leftButton.textContent = leftText
-  rightButton.textContent = rightText
+  const [leftButton, rightButton] = createActions(leftText, rightText, leftCancel)
 
-  if (title) {
-    titler.textContent = title
-    body.appendChild(titler)
-  }
-  if (content) {
-    contenter.textContent = content
-    body.appendChild(contenter)
-  }
-  if (html) {
-    htmlNode.innerHTML = html
-    body.appendChild(htmlNode)
-  }
-  actions.appendChild(leftButton)
-  actions.appendChild(rightButton)
-  dialog.appendChild(body)
-  dialog.appendChild(actions)
-  if (zIndex) {
-    layer.style.zIndex = zIndex
-  }
-  layer.appendChild(dialog)
-  mounter.appendChild(layer)
-
+  const mounter = createWrapper(
+    theme,
+    createHeader({ title, content, html }),
+    [leftButton, rightButton],
+    zIndex
+  )
   document.body.appendChild(mounter)
 
   return new Promise(function confirmPromise(resolve, reject) {
@@ -129,60 +194,33 @@ export function confirm({
 }
 
 export function prompt({
+  theme,
   title = '',
   placeholder = '',
   defaultValue = '',
-  leftText = 'Cancel',
-  rightText = 'OK',
+  leftText = window.__pd_config.cancelText,
+  rightText = window.__pd_config.okText,
   leftCancel = true,
   zIndex,
+  onBlur = () => {},
 }) {
-  const mounter = $e('div', $class('mounter'))
-  const layer = $e('div', $class('layer'))
-  const dialog = $e('div', $class('dialog'))
-  const body = $e('div', $class('body'))
-  const titler = $e('h3', $class('title'))
-  const controller = $e('div', $class('control'))
-  const textarea = $e('textarea', $class('textarea'))
-  const actions = $e('div', $class('actions'))
-  const leftButton = $e('button', $class('button', leftCancel ? 'cancel' : ''))
-  const rightButton = $e('button', $class('button', leftCancel ? '' : 'cancel'))
-  leftButton.textContent = leftText
-  rightButton.textContent = rightText
-
-  if (title) {
-    titler.textContent = title
-    body.appendChild(titler)
-  }
-
-  textarea.placeholder = placeholder || title || ''
-  textarea.rows = 3
-  controller.appendChild(textarea)
-  body.appendChild(controller)
-
-  actions.appendChild(leftButton)
-  actions.appendChild(rightButton)
-  dialog.appendChild(body)
-  dialog.appendChild(actions)
-  if (zIndex) {
-    layer.style.zIndex = zIndex
-  }
-  layer.appendChild(dialog)
-  mounter.appendChild(layer)
-
+  const [leftButton, rightButton] = createActions(leftText, rightText, leftCancel)
+  const textarea = create('textarea', ['textarea'], {
+    placeholder: placeholder || title || '',
+    rows: 3,
+  })
+  const mounter = createWrapper(
+    theme,
+    [...createHeader({ title }), create('div', ['control'], null, [textarea])],
+    [leftButton, rightButton],
+    zIndex
+  )
   document.body.appendChild(mounter)
 
   textarea.value = defaultValue
   textarea.focus()
 
-  textarea.addEventListener('blur', function scrollBack() {
-    if (typeof window.scrollTo === 'function') {
-      window.scrollTo(0, 0)
-    } else {
-      window.scrollLeft = 0
-      window.scrollTop = 0
-    }
-  })
+  textarea.addEventListener('blur', onBlur)
 
   return new Promise(function confirmPromise(resolve, reject) {
     leftButton.addEventListener('click', function leftClick() {
@@ -226,11 +264,12 @@ function clear() {
 export function toast({ title = '', iconType, duration = 2000, zIndex }) {
   clear()
 
-  const toaster = $e('div', $class('toast'))
-  if (zIndex) {
-    toaster.style.zIndex = zIndex
-  }
-  const titler = $e('h3', $class('title'))
+  const toaster = create('div', ['toast'], {
+    style: zIndex ? { zIndex } : undefined,
+  })
+  const titleNode = create('h3', ['title'], {
+    textContent: title,
+  })
 
   if (iconType && IconTypes[iconType]) {
     const icon = $e('span', $class('icon'))
@@ -238,8 +277,7 @@ export function toast({ title = '', iconType, duration = 2000, zIndex }) {
     toaster.appendChild(icon)
   }
 
-  titler.textContent = title
-  toaster.appendChild(titler)
+  toaster.appendChild(titleNode)
   shareMounter.appendChild(toaster)
 
   document.body.appendChild(shareMounter)
@@ -269,15 +307,15 @@ export function loading(config) {
 
   clear()
 
-  const loader = $e('div', $class('loading'))
+  const loader = create('div', ['loading'])
   if (z) {
     loader.style.zIndex = z
   }
 
   if (text) {
-    const titler = $e('h3', $class('title'))
-    titler.textContent = text
-    loader.appendChild(titler)
+    const title = create('h3', ['title'])
+    title.textContent = text
+    loader.appendChild(title)
   }
 
   shareMounter.appendChild(loader)
