@@ -10,3 +10,4 @@ config
 .browserslistrc
 .postcssrc.js
 yarn.lock
+.idea
