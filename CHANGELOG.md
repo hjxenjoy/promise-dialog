@@ -1,3 +1,7 @@
+## [2.0.1](https://github.com/hjxenjoy/promise-dialog/compare/2.0.0...2.0.1) (2021-03-02)
+
+
+
 # [2.0.0](https://github.com/hjxenjoy/promise-dialog/compare/1.5.1...2.0.0) (2021-03-02)
 
 
