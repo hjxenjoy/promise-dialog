@@ -3,7 +3,7 @@
   "version": "1.5.1",
   "description": "Promise Based Dialog",
   "main": "dist/index.js",
-  "typings": "types/index.d.ts",
+  "typings": "src/index.d.ts",
   "scripts": {
     "prestart": "yarn",
     "prepublishOnly": "rm -rf ./dist && npm run build",
