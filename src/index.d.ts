@@ -49,9 +49,9 @@ interface LoadingConfig {
 
 export function setConfig(config: ConfigType): void
 export function scrollBack(x?: number, y?: number): void
-export function alert(config: AlertConfig): Promise<void>;
+export function alert(config: AlertConfig): Promise<void> | void;
 export function confirm(config: ConfirmConfig): Promise<void>;
 export function prompt(config: PromptConfig): Promise<string>;
-export function toast(config: ToastConfig): Promise<void>;
+export function toast(config: ToastConfig): Promise<void> | void;
 export function loading(config: LoadingConfig | string): void;
 export function loaded(): void;
