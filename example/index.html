@@ -11,13 +11,29 @@
 <body>
   <div class="example" id="example">
     <h1>Promise Dialog Example</h1>
-    <button class="button" data-func="alert">alert</button>
-    <button class="button" data-func="alert2">alert (Dark Mode )</button>
-    <button class="button" data-func="confirm">confirm</button>
-    <button class="button" data-func="prompt">prompt</button>
-    <button class="button" data-func="toast">toast</button>
-    <button class="button" data-func="loading">loading</button>
-    <button class="button" data-func="loaded">loaded</button>
+    <div class="group">
+      <button class="button block" data-func="toggle">Toggle Dark Mode</button>
+    </div>
+    <div class="group">
+      <button class="button" data-func="alert">Async Alert</button>
+      <button class="button" data-func="syncAlert">Sync Alert</button>
+    </div>
+    <div class="group">
+      <button class="button" data-func="confirm">Async Confirm</button>
+      <button class="button" data-func="syncConfirm">Sync Confirm</button>
+    </div>
+    <div class="group">
+      <button class="button" data-func="prompt">Async Prompt</button>
+      <button class="button" data-func="syncPrompt">Sync Prompt</button>
+    </div>
+    <div class="group">
+      <button class="button" data-func="toast">Async Toast</button>
+      <button class="button" data-func="syncToast">Sync Toast</button>
+    </div>
+    <div class="group">
+      <button class="button" data-func="loading">Loading</button>
+      <button class="button" data-func="loaded">Loaded</button>
+    </div>
   </div>
 </body>
 

@@ -152,6 +152,10 @@ export function alert({
   })
 }
 
+export function syncAlert({ onClose = () => {}, ...alertProps }) {
+  alert(alertProps).then(onClose)
+}
+
 export function confirm({
   theme,
   title = '',
@@ -191,6 +195,12 @@ export function confirm({
       }
     })
   })
+}
+
+export function syncConfirm({ onCancel = () => {}, onOk = () => {}, ...confirmProps }) {
+  confirm(confirmProps)
+    .then(onOk)
+    .catch(onCancel)
 }
 
 export function prompt({
@@ -243,6 +253,12 @@ export function prompt({
   })
 }
 
+export function syncPrompt({ onCancel = () => {}, onOk = () => {}, ...promptProps }) {
+  prompt(promptProps)
+    .then(onOk)
+    .catch(onCancel)
+}
+
 const IconTypes = {
   success: 'success',
   warn: 'warn',
@@ -288,6 +304,10 @@ export function toast({ title = '', iconType, duration = 2000, zIndex }) {
       clear()
     }, duration)
   })
+}
+
+export function syncToast({ onClose = () => {}, ...toastProps }) {
+  toast(toastProps).then(onClose)
 }
 
 export function loading(config) {
