@@ -88,7 +88,11 @@ body.dark {
   color: #ccc;
 }
 
-.promise-dialog__dark .promise-dialog__textarea {
+.promise-dialog__dark .promise-dialog__input {
   background-color: #666;
   border-color: #777;
+}
+
+.promise-dialog__dark .promise-dialog__input::placeholder {
+  color: #999;
 }

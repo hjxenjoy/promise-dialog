@@ -32,7 +32,8 @@ interface PromptConfig {
   rightText?: string;
   leftCancel?: boolean;
   zIndex?: number;
-  onBlur?: (evt: FocusEvent) => void
+  useInput?: boolean;
+  onBlur?: (evt: FocusEvent) => void;
 }
 
 interface ToastConfig {
@@ -47,8 +48,8 @@ interface LoadingConfig {
   zIndex?: number;
 }
 
-export function setConfig(config: ConfigType): void
-export function scrollBack(x?: number, y?: number): void
+export function setConfig(config: ConfigType): void;
+export function scrollBack(x?: number, y?: number): void;
 export function alert(config: AlertConfig): Promise<void>;
 export function syncAlert(config: AlertConfig & { onClose?(): void }): void;
 export function confirm(config: ConfirmConfig): Promise<void>;

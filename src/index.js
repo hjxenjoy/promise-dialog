@@ -211,40 +211,46 @@ export function prompt({
   leftText = window.__pd_config.cancelText,
   rightText = window.__pd_config.okText,
   leftCancel = true,
+  useInput = false,
   zIndex,
   onBlur = () => {},
 }) {
   const [leftButton, rightButton] = createActions(leftText, rightText, leftCancel)
-  const textarea = create('textarea', ['textarea'], {
-    placeholder: placeholder || title || '',
-    rows: 3,
-  })
+  const input = useInput
+    ? create('input', ['input'], {
+        type: 'text',
+        placeholder: placeholder || title || '',
+      })
+    : create('textarea', ['textarea', 'input'], {
+        placeholder: placeholder || title || '',
+        rows: 3,
+      })
   const mounter = createWrapper(
     theme,
-    [...createHeader({ title }), create('div', ['control'], null, [textarea])],
+    [...createHeader({ title }), create('div', ['control'], null, [input])],
     [leftButton, rightButton],
     zIndex
   )
   document.body.appendChild(mounter)
 
-  textarea.value = defaultValue
-  textarea.focus()
+  input.value = defaultValue
+  input.focus()
 
-  textarea.addEventListener('blur', onBlur)
+  input.addEventListener('blur', onBlur)
 
   return new Promise(function confirmPromise(resolve, reject) {
     leftButton.addEventListener('click', function leftClick() {
       if (leftCancel) {
         reject()
       } else {
-        resolve(textarea.value)
+        resolve(input.value)
       }
       document.body.removeChild(mounter)
     })
 
     rightButton.addEventListener('click', function rightClick() {
       if (leftCancel) {
-        resolve(textarea.value)
+        resolve(input.value)
       } else {
         reject()
       }

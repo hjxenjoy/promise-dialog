@@ -49,13 +49,14 @@ function testConfirm(isAsync) {
   }
 }
 
-function testPrompt(isAsync) {
+function testPrompt(isAsync, useInput = false) {
   const props = {
     theme: isDark ? 'dark' : undefined,
     title: 'Hello Prompt',
     placeholder: 'Please typo something...',
     defaultValue: 'Default Values...',
     onBlur: pd.scrollBack,
+    useInput,
   }
   const onOk = value => console.log(value)
   const onCancel = () => console.log('prompt cancel')
@@ -122,11 +123,17 @@ example.addEventListener('click', event => {
     case 'syncConfirm':
       testConfirm()
       break
-    case 'prompt':
+    case 'prompt1':
       testPrompt(true)
       break
-    case 'syncPrompt':
+    case 'syncPrompt1':
       testPrompt()
+      break
+    case 'prompt2':
+      testPrompt(true, true)
+      break
+    case 'syncPrompt2':
+      testPrompt(false, true)
       break
     case 'toast':
       testToast(true)

@@ -61,6 +61,11 @@
   min-width: 256px;
 }
 
+.promise-dialog__input::placeholder {
+  color: #BBB;
+}
+
+.promise-dialog__input,
 .promise-dialog__textarea {
   display: block;
   width: 100%;
@@ -71,6 +76,9 @@
   font-family: inherit;
   color: inherit;
   padding: 5px 10px;
+}
+
+.promise-dialog__textarea {
   resize: none;
 }
 
