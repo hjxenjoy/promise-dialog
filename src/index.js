@@ -5,36 +5,42 @@ const DefaultConfig = {
   cancelText: 'Cancel',
 }
 
+// eslint-disable-next-line no-restricted-globals,no-undef
+const global = typeof self !== 'undefined' ? self : this
+
 // ssr
-if (typeof window !== 'undefined' && (!window.__pd_config || !('okText' in window.__pd_config))) {
-  window.__pd_config = {
+if (typeof global !== 'undefined' && (!global.__pd_config || !('okText' in global.__pd_config))) {
+  global.__pd_config = {
     ...DefaultConfig,
   }
 }
 
 export function setConfig({ okText, cancelText }) {
-  if (!('__pd_config' in window)) {
-    window.__pd_config = { ...DefaultConfig }
+  if (!('__pd_config' in global)) {
+    global.__pd_config = { ...DefaultConfig }
   }
   if (okText) {
-    window.__pd_config.okText = okText
+    global.__pd_config.okText = okText
   }
   if (cancelText) {
-    window.__pd_config.cancelText = cancelText
+    global.__pd_config.cancelText = cancelText
   }
 }
 
 export function scrollBack(x = 0, y = 0) {
-  if (typeof window.scrollTo === 'function') {
-    window.scrollTo(x, y)
+  if (typeof global.scrollTo === 'function') {
+    global.scrollTo(x, y)
   } else {
-    window.scrollLeft = x
-    window.scrollTop = y
+    global.scrollLeft = x
+    global.scrollTop = y
   }
 }
 
 function $e(tagName, className) {
-  const element = document.createElement(tagName)
+  if (!('document' in global)) {
+    throw new Error('document is undefined.')
+  }
+  const element = global.document.createElement(tagName)
   if (className) {
     element.className = className
   }
@@ -49,6 +55,9 @@ function $class(...classNames) {
 }
 
 function create(tagName, classes, props, children) {
+  if (!('document' in global)) {
+    throw new Error('document is undefined.')
+  }
   const element = $e(tagName, $class(...classes))
   if (props) {
     for (const key in props) {
@@ -70,6 +79,9 @@ function create(tagName, classes, props, children) {
 }
 
 function createActions(leftText, rightText, leftCancel) {
+  if (!('document' in global)) {
+    throw new Error('document is undefined.')
+  }
   const leftButton = create('button', ['button', leftCancel ? 'cancel' : ''], {
     textContent: leftText,
   })
@@ -80,6 +92,9 @@ function createActions(leftText, rightText, leftCancel) {
 }
 
 function createHeader({ title, content, html }) {
+  if (!('document' in global)) {
+    throw new Error('document is undefined.')
+  }
   const header = []
   if (title) {
     header.push(
@@ -108,6 +123,9 @@ function createHeader({ title, content, html }) {
 }
 
 function createWrapper(theme, header, actions, zIndex) {
+  if (!('document' in global)) {
+    throw new Error('document is undefined.')
+  }
   return create('div', ['mounter', theme], null, [
     create(
       'div',
@@ -136,24 +154,30 @@ export function alert({
   title = '',
   content = '',
   html = '',
-  buttonText = window.__pd_config.okText,
+  buttonText = global.__pd_config.okText,
   zIndex,
 }) {
+  if (!('document' in global)) {
+    throw new Error('document is undefined.')
+  }
   const button = create('button', ['button'], {
     textContent: buttonText,
   })
   const mounter = createWrapper(theme, createHeader({ title, content, html }), [button], zIndex)
-  document.body.appendChild(mounter)
+  global.document.body.appendChild(mounter)
 
   return new Promise(function alertPromise(resolve) {
     button.addEventListener('click', function removeAlert() {
-      document.body.removeChild(mounter)
+      global.document.body.removeChild(mounter)
       resolve()
     })
   })
 }
 
 export function syncAlert({ onClose = () => {}, ...alertProps }) {
+  if (!('document' in global)) {
+    throw new Error('document is undefined.')
+  }
   alert(alertProps).then(onClose)
 }
 
@@ -162,11 +186,14 @@ export function confirm({
   title = '',
   content = '',
   html = '',
-  leftText = window.__pd_config.cancelText,
-  rightText = window.__pd_config.okText,
+  leftText = global.__pd_config.cancelText,
+  rightText = global.__pd_config.okText,
   leftCancel = true,
   zIndex,
 }) {
+  if (!('document' in global)) {
+    throw new Error('document is undefined.')
+  }
   const [leftButton, rightButton] = createActions(leftText, rightText, leftCancel)
 
   const mounter = createWrapper(
@@ -175,11 +202,11 @@ export function confirm({
     [leftButton, rightButton],
     zIndex
   )
-  document.body.appendChild(mounter)
+  global.document.body.appendChild(mounter)
 
   return new Promise(function confirmPromise(resolve, reject) {
     leftButton.addEventListener('click', function leftClick() {
-      document.body.removeChild(mounter)
+      global.document.body.removeChild(mounter)
       if (leftCancel) {
         reject()
       } else {
@@ -188,7 +215,7 @@ export function confirm({
     })
 
     rightButton.addEventListener('click', function rightClick() {
-      document.body.removeChild(mounter)
+      global.document.body.removeChild(mounter)
       if (leftCancel) {
         resolve()
       } else {
@@ -199,6 +226,9 @@ export function confirm({
 }
 
 export function syncConfirm({ onCancel = () => {}, onOk = () => {}, ...confirmProps }) {
+  if (!('document' in global)) {
+    throw new Error('document is undefined.')
+  }
   confirm(confirmProps)
     .then(onOk)
     .catch(onCancel)
@@ -209,13 +239,16 @@ export function prompt({
   title = '',
   placeholder = '',
   defaultValue = '',
-  leftText = window.__pd_config.cancelText,
-  rightText = window.__pd_config.okText,
+  leftText = global.__pd_config.cancelText,
+  rightText = global.__pd_config.okText,
   leftCancel = true,
   useInput = false,
   zIndex,
   onBlur = () => {},
 }) {
+  if (!('document' in global)) {
+    throw new Error('document is undefined.')
+  }
   const [leftButton, rightButton] = createActions(leftText, rightText, leftCancel)
   const input = useInput
     ? create('input', ['input'], {
@@ -232,7 +265,7 @@ export function prompt({
     [leftButton, rightButton],
     zIndex
   )
-  document.body.appendChild(mounter)
+  global.document.body.appendChild(mounter)
 
   input.value = defaultValue
   input.focus()
@@ -246,7 +279,7 @@ export function prompt({
       } else {
         resolve(input.value)
       }
-      document.body.removeChild(mounter)
+      global.document.body.removeChild(mounter)
     })
 
     rightButton.addEventListener('click', function rightClick() {
@@ -255,12 +288,15 @@ export function prompt({
       } else {
         reject()
       }
-      document.body.removeChild(mounter)
+      global.document.body.removeChild(mounter)
     })
   })
 }
 
 export function syncPrompt({ onCancel = () => {}, onOk = () => {}, ...promptProps }) {
+  if (!('document' in global)) {
+    throw new Error('document is undefined.')
+  }
   prompt(promptProps)
     .then(onOk)
     .catch(onCancel)
@@ -275,9 +311,12 @@ const shareMounter = $e('div', $class('mounter'))
 let toastTimer
 
 function clear() {
-  if (shareMounter.parentNode === document.body) {
+  if (!('document' in global)) {
+    throw new Error('document is undefined.')
+  }
+  if (shareMounter.parentNode === global.document.body) {
     clearTimeout(toastTimer)
-    document.body.removeChild(shareMounter)
+    global.document.body.removeChild(shareMounter)
     if (shareMounter.firstChild) {
       shareMounter.removeChild(shareMounter.firstChild)
     }
@@ -285,6 +324,9 @@ function clear() {
 }
 
 export function toast({ title = '', iconType, duration = 2000, zIndex }) {
+  if (!('document' in global)) {
+    throw new Error('document is undefined.')
+  }
   clear()
 
   const toaster = create('div', ['toast'], {
@@ -303,7 +345,7 @@ export function toast({ title = '', iconType, duration = 2000, zIndex }) {
   toaster.appendChild(titleNode)
   shareMounter.appendChild(toaster)
 
-  document.body.appendChild(shareMounter)
+  global.document.body.appendChild(shareMounter)
 
   return new Promise(function toastPromise(resolve) {
     toastTimer = setTimeout(() => {
@@ -314,10 +356,16 @@ export function toast({ title = '', iconType, duration = 2000, zIndex }) {
 }
 
 export function syncToast({ onClose = () => {}, ...toastProps }) {
+  if (!('document' in global)) {
+    throw new Error('document is undefined.')
+  }
   toast(toastProps).then(onClose)
 }
 
 export function loading(config) {
+  if (!('document' in global)) {
+    throw new Error('document is undefined.')
+  }
   let text
   let z
 
@@ -346,7 +394,7 @@ export function loading(config) {
   }
 
   shareMounter.appendChild(loader)
-  document.body.appendChild(shareMounter)
+  global.document.body.appendChild(shareMounter)
 }
 
 export function loaded() {
