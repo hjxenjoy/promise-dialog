@@ -37,9 +37,6 @@ export function scrollBack(x = 0, y = 0) {
 }
 
 function $e(tagName, className) {
-  if (!('document' in win)) {
-    throw new Error('document is undefined.')
-  }
   const element = win.document.createElement(tagName)
   if (className) {
     element.className = className
@@ -55,9 +52,6 @@ function $class(...classNames) {
 }
 
 function create(tagName, classes, props, children) {
-  if (!('document' in win)) {
-    throw new Error('document is undefined.')
-  }
   const element = $e(tagName, $class(...classes))
   if (props) {
     for (const key in props) {
@@ -79,9 +73,6 @@ function create(tagName, classes, props, children) {
 }
 
 function createActions(leftText, rightText, leftCancel) {
-  if (!('document' in win)) {
-    throw new Error('document is undefined.')
-  }
   const leftButton = create('button', ['button', leftCancel ? 'cancel' : ''], {
     textContent: leftText,
   })
@@ -92,9 +83,6 @@ function createActions(leftText, rightText, leftCancel) {
 }
 
 function createHeader({ title, content, html }) {
-  if (!('document' in win)) {
-    throw new Error('document is undefined.')
-  }
   const header = []
   if (title) {
     header.push(
@@ -123,9 +111,6 @@ function createHeader({ title, content, html }) {
 }
 
 function createWrapper(theme, header, actions, zIndex) {
-  if (!('document' in win)) {
-    throw new Error('document is undefined.')
-  }
   return create('div', ['mounter', theme], null, [
     create(
       'div',
@@ -158,7 +143,8 @@ export function alert({
   zIndex,
 }) {
   if (!('document' in win)) {
-    throw new Error('document is undefined.')
+    console.log('window is required.')
+    return Promise.resolve()
   }
   const button = create('button', ['button'], {
     textContent: buttonText,
@@ -176,7 +162,8 @@ export function alert({
 
 export function syncAlert({ onClose = () => {}, ...alertProps }) {
   if (!('document' in win)) {
-    throw new Error('document is undefined.')
+    console.log('window is required.')
+    return
   }
   alert(alertProps).then(onClose)
 }
@@ -192,7 +179,8 @@ export function confirm({
   zIndex,
 }) {
   if (!('document' in win)) {
-    throw new Error('document is undefined.')
+    console.log('window is required.')
+    return Promise.resolve()
   }
   const [leftButton, rightButton] = createActions(leftText, rightText, leftCancel)
 
@@ -227,7 +215,8 @@ export function confirm({
 
 export function syncConfirm({ onCancel = () => {}, onOk = () => {}, ...confirmProps }) {
   if (!('document' in win)) {
-    throw new Error('document is undefined.')
+    console.log('window is required.')
+    return
   }
   confirm(confirmProps)
     .then(onOk)
@@ -247,8 +236,10 @@ export function prompt({
   onBlur = () => {},
 }) {
   if (!('document' in win)) {
-    throw new Error('document is undefined.')
+    console.log('window is required.')
+    return Promise.resolve()
   }
+
   const [leftButton, rightButton] = createActions(leftText, rightText, leftCancel)
   const input = useInput
     ? create('input', ['input'], {
@@ -295,7 +286,8 @@ export function prompt({
 
 export function syncPrompt({ onCancel = () => {}, onOk = () => {}, ...promptProps }) {
   if (!('document' in win)) {
-    throw new Error('document is undefined.')
+    console.log('window is required.')
+    return
   }
   prompt(promptProps)
     .then(onOk)
@@ -312,7 +304,8 @@ let toastTimer
 
 function clear() {
   if (!('document' in win)) {
-    throw new Error('document is undefined.')
+    console.log('window is required.')
+    return
   }
   if (shareMounter.parentNode === win.document.body) {
     clearTimeout(toastTimer)
@@ -325,7 +318,8 @@ function clear() {
 
 export function toast({ title = '', iconType, duration = 2000, zIndex }) {
   if (!('document' in win)) {
-    throw new Error('document is undefined.')
+    console.log('window is required.')
+    return Promise.resolve()
   }
   clear()
 
@@ -357,14 +351,16 @@ export function toast({ title = '', iconType, duration = 2000, zIndex }) {
 
 export function syncToast({ onClose = () => {}, ...toastProps }) {
   if (!('document' in win)) {
-    throw new Error('document is undefined.')
+    console.log('window is required.')
+    return
   }
   toast(toastProps).then(onClose)
 }
 
 export function loading(config) {
   if (!('document' in win)) {
-    throw new Error('document is undefined.')
+    console.log('window is required.')
+    return
   }
   let text
   let z
