@@ -1,6 +1,6 @@
 {
   "name": "promise-dialog",
-  "version": "2.2.5",
+  "version": "2.2.6",
   "description": "Promise Based Dialog",
   "main": "dist/index.js",
   "scripts": {
