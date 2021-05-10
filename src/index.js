@@ -15,7 +15,18 @@ const win =
             appendChild() {},
             removeChild() {},
           },
-          createElement() {},
+          createElement() {
+            return {
+              className: '',
+              textContent: '',
+              innerHTML: '',
+              style: {},
+              addEventListener() {},
+              removeEventListener() {},
+              appendChild() {},
+              removeChild() {},
+            }
+          },
         },
       }
 
