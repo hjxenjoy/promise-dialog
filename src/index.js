@@ -6,7 +6,18 @@ const DefaultConfig = {
 }
 
 // eslint-disable-next-line no-restricted-globals,no-undef
-const win = typeof window !== 'undefined' ? window : {}
+const win =
+  typeof window !== 'undefined'
+    ? window
+    : {
+        document: {
+          body: {
+            appendChild() {},
+            removeChild() {},
+          },
+          createElement() {},
+        },
+      }
 
 // ssr
 if (typeof win !== 'undefined' && (!win.__pd_config || !('okText' in win.__pd_config))) {
