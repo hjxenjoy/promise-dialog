@@ -5,7 +5,8 @@ const DefaultConfig = {
   cancelText: 'Cancel',
 }
 
-if (!window.__pd_config || !('okText' in window)) {
+// ssr
+if (typeof window !== 'undefined' && (!window.__pd_config || !('okText' in window.__pd_config))) {
   window.__pd_config = {
     ...DefaultConfig,
   }
