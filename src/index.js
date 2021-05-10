@@ -6,41 +6,41 @@ const DefaultConfig = {
 }
 
 // eslint-disable-next-line no-restricted-globals,no-undef
-const global = typeof self !== 'undefined' ? self : this
+const win = typeof window !== 'undefined' ? window : {}
 
 // ssr
-if (typeof global !== 'undefined' && (!global.__pd_config || !('okText' in global.__pd_config))) {
-  global.__pd_config = {
+if (typeof win !== 'undefined' && (!win.__pd_config || !('okText' in win.__pd_config))) {
+  win.__pd_config = {
     ...DefaultConfig,
   }
 }
 
 export function setConfig({ okText, cancelText }) {
-  if (!('__pd_config' in global)) {
-    global.__pd_config = { ...DefaultConfig }
+  if (!('__pd_config' in win)) {
+    win.__pd_config = { ...DefaultConfig }
   }
   if (okText) {
-    global.__pd_config.okText = okText
+    win.__pd_config.okText = okText
   }
   if (cancelText) {
-    global.__pd_config.cancelText = cancelText
+    win.__pd_config.cancelText = cancelText
   }
 }
 
 export function scrollBack(x = 0, y = 0) {
-  if (typeof global.scrollTo === 'function') {
-    global.scrollTo(x, y)
+  if (typeof win.scrollTo === 'function') {
+    win.scrollTo(x, y)
   } else {
-    global.scrollLeft = x
-    global.scrollTop = y
+    win.scrollLeft = x
+    win.scrollTop = y
   }
 }
 
 function $e(tagName, className) {
-  if (!('document' in global)) {
+  if (!('document' in win)) {
     throw new Error('document is undefined.')
   }
-  const element = global.document.createElement(tagName)
+  const element = win.document.createElement(tagName)
   if (className) {
     element.className = className
   }
@@ -55,7 +55,7 @@ function $class(...classNames) {
 }
 
 function create(tagName, classes, props, children) {
-  if (!('document' in global)) {
+  if (!('document' in win)) {
     throw new Error('document is undefined.')
   }
   const element = $e(tagName, $class(...classes))
@@ -79,7 +79,7 @@ function create(tagName, classes, props, children) {
 }
 
 function createActions(leftText, rightText, leftCancel) {
-  if (!('document' in global)) {
+  if (!('document' in win)) {
     throw new Error('document is undefined.')
   }
   const leftButton = create('button', ['button', leftCancel ? 'cancel' : ''], {
@@ -92,7 +92,7 @@ function createActions(leftText, rightText, leftCancel) {
 }
 
 function createHeader({ title, content, html }) {
-  if (!('document' in global)) {
+  if (!('document' in win)) {
     throw new Error('document is undefined.')
   }
   const header = []
@@ -123,7 +123,7 @@ function createHeader({ title, content, html }) {
 }
 
 function createWrapper(theme, header, actions, zIndex) {
-  if (!('document' in global)) {
+  if (!('document' in win)) {
     throw new Error('document is undefined.')
   }
   return create('div', ['mounter', theme], null, [
@@ -154,28 +154,28 @@ export function alert({
   title = '',
   content = '',
   html = '',
-  buttonText = global.__pd_config.okText,
+  buttonText = win.__pd_config.okText,
   zIndex,
 }) {
-  if (!('document' in global)) {
+  if (!('document' in win)) {
     throw new Error('document is undefined.')
   }
   const button = create('button', ['button'], {
     textContent: buttonText,
   })
   const mounter = createWrapper(theme, createHeader({ title, content, html }), [button], zIndex)
-  global.document.body.appendChild(mounter)
+  win.document.body.appendChild(mounter)
 
   return new Promise(function alertPromise(resolve) {
     button.addEventListener('click', function removeAlert() {
-      global.document.body.removeChild(mounter)
+      win.document.body.removeChild(mounter)
       resolve()
     })
   })
 }
 
 export function syncAlert({ onClose = () => {}, ...alertProps }) {
-  if (!('document' in global)) {
+  if (!('document' in win)) {
     throw new Error('document is undefined.')
   }
   alert(alertProps).then(onClose)
@@ -186,12 +186,12 @@ export function confirm({
   title = '',
   content = '',
   html = '',
-  leftText = global.__pd_config.cancelText,
-  rightText = global.__pd_config.okText,
+  leftText = win.__pd_config.cancelText,
+  rightText = win.__pd_config.okText,
   leftCancel = true,
   zIndex,
 }) {
-  if (!('document' in global)) {
+  if (!('document' in win)) {
     throw new Error('document is undefined.')
   }
   const [leftButton, rightButton] = createActions(leftText, rightText, leftCancel)
@@ -202,11 +202,11 @@ export function confirm({
     [leftButton, rightButton],
     zIndex
   )
-  global.document.body.appendChild(mounter)
+  win.document.body.appendChild(mounter)
 
   return new Promise(function confirmPromise(resolve, reject) {
     leftButton.addEventListener('click', function leftClick() {
-      global.document.body.removeChild(mounter)
+      win.document.body.removeChild(mounter)
       if (leftCancel) {
         reject()
       } else {
@@ -215,7 +215,7 @@ export function confirm({
     })
 
     rightButton.addEventListener('click', function rightClick() {
-      global.document.body.removeChild(mounter)
+      win.document.body.removeChild(mounter)
       if (leftCancel) {
         resolve()
       } else {
@@ -226,7 +226,7 @@ export function confirm({
 }
 
 export function syncConfirm({ onCancel = () => {}, onOk = () => {}, ...confirmProps }) {
-  if (!('document' in global)) {
+  if (!('document' in win)) {
     throw new Error('document is undefined.')
   }
   confirm(confirmProps)
@@ -239,14 +239,14 @@ export function prompt({
   title = '',
   placeholder = '',
   defaultValue = '',
-  leftText = global.__pd_config.cancelText,
-  rightText = global.__pd_config.okText,
+  leftText = win.__pd_config.cancelText,
+  rightText = win.__pd_config.okText,
   leftCancel = true,
   useInput = false,
   zIndex,
   onBlur = () => {},
 }) {
-  if (!('document' in global)) {
+  if (!('document' in win)) {
     throw new Error('document is undefined.')
   }
   const [leftButton, rightButton] = createActions(leftText, rightText, leftCancel)
@@ -265,7 +265,7 @@ export function prompt({
     [leftButton, rightButton],
     zIndex
   )
-  global.document.body.appendChild(mounter)
+  win.document.body.appendChild(mounter)
 
   input.value = defaultValue
   input.focus()
@@ -279,7 +279,7 @@ export function prompt({
       } else {
         resolve(input.value)
       }
-      global.document.body.removeChild(mounter)
+      win.document.body.removeChild(mounter)
     })
 
     rightButton.addEventListener('click', function rightClick() {
@@ -288,13 +288,13 @@ export function prompt({
       } else {
         reject()
       }
-      global.document.body.removeChild(mounter)
+      win.document.body.removeChild(mounter)
     })
   })
 }
 
 export function syncPrompt({ onCancel = () => {}, onOk = () => {}, ...promptProps }) {
-  if (!('document' in global)) {
+  if (!('document' in win)) {
     throw new Error('document is undefined.')
   }
   prompt(promptProps)
@@ -311,12 +311,12 @@ const shareMounter = $e('div', $class('mounter'))
 let toastTimer
 
 function clear() {
-  if (!('document' in global)) {
+  if (!('document' in win)) {
     throw new Error('document is undefined.')
   }
-  if (shareMounter.parentNode === global.document.body) {
+  if (shareMounter.parentNode === win.document.body) {
     clearTimeout(toastTimer)
-    global.document.body.removeChild(shareMounter)
+    win.document.body.removeChild(shareMounter)
     if (shareMounter.firstChild) {
       shareMounter.removeChild(shareMounter.firstChild)
     }
@@ -324,7 +324,7 @@ function clear() {
 }
 
 export function toast({ title = '', iconType, duration = 2000, zIndex }) {
-  if (!('document' in global)) {
+  if (!('document' in win)) {
     throw new Error('document is undefined.')
   }
   clear()
@@ -345,7 +345,7 @@ export function toast({ title = '', iconType, duration = 2000, zIndex }) {
   toaster.appendChild(titleNode)
   shareMounter.appendChild(toaster)
 
-  global.document.body.appendChild(shareMounter)
+  win.document.body.appendChild(shareMounter)
 
   return new Promise(function toastPromise(resolve) {
     toastTimer = setTimeout(() => {
@@ -356,14 +356,14 @@ export function toast({ title = '', iconType, duration = 2000, zIndex }) {
 }
 
 export function syncToast({ onClose = () => {}, ...toastProps }) {
-  if (!('document' in global)) {
+  if (!('document' in win)) {
     throw new Error('document is undefined.')
   }
   toast(toastProps).then(onClose)
 }
 
 export function loading(config) {
-  if (!('document' in global)) {
+  if (!('document' in win)) {
     throw new Error('document is undefined.')
   }
   let text
@@ -394,7 +394,7 @@ export function loading(config) {
   }
 
   shareMounter.appendChild(loader)
-  global.document.body.appendChild(shareMounter)
+  win.document.body.appendChild(shareMounter)
 }
 
 export function loaded() {
