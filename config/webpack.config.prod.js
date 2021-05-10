@@ -9,6 +9,7 @@ module.exports = {
     path: path.join(__dirname, '../dist'),
     filename: 'index.js',
     library: 'PromiseDialog',
+    globalObject: 'this',
     libraryTarget: 'umd',
   },
   resolve: {
@@ -44,5 +45,5 @@ module.exports = {
   optimization: {
     // We no not want to minimize our code.
     minimize: false,
-  }
+  },
 }
