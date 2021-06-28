@@ -1,65 +1,40 @@
 import './style.css'
 
-const DefaultConfig = {
+const PROMISE_DIALOG_CONFIG = {
   okText: 'OK',
   cancelText: 'Cancel',
+  TOAST_TIMER: undefined,
+  PROMISE_DIALOG_SHARE_MOUNTER: undefined,
 }
 
-// eslint-disable-next-line no-restricted-globals,no-undef
-const win =
-  typeof window !== 'undefined'
-    ? window
-    : {
-        document: {
-          body: {
-            appendChild() {},
-            removeChild() {},
-          },
-          createElement() {
-            return {
-              className: '',
-              textContent: '',
-              innerHTML: '',
-              style: {},
-              addEventListener() {},
-              removeEventListener() {},
-              appendChild() {},
-              removeChild() {},
-            }
-          },
-        },
-      }
-
-// ssr
-if (typeof win !== 'undefined' && (!win.__pd_config || !('okText' in win.__pd_config))) {
-  win.__pd_config = {
-    ...DefaultConfig,
-  }
+const IconTypes = {
+  success: 'success',
+  warn: 'warn',
 }
 
 export function setConfig({ okText, cancelText }) {
-  if (!('__pd_config' in win)) {
-    win.__pd_config = { ...DefaultConfig }
+  if (!('PROMISE_DIALOG_CONFIG' in window)) {
+    window.PROMISE_DIALOG_CONFIG = { ...PROMISE_DIALOG_CONFIG }
   }
   if (okText) {
-    win.__pd_config.okText = okText
+    window.PROMISE_DIALOG_CONFIG.okText = okText
   }
   if (cancelText) {
-    win.__pd_config.cancelText = cancelText
+    window.PROMISE_DIALOG_CONFIG.cancelText = cancelText
   }
 }
 
 export function scrollBack(x = 0, y = 0) {
-  if (typeof win.scrollTo === 'function') {
-    win.scrollTo(x, y)
+  if (typeof window.scrollTo === 'function') {
+    window.scrollTo(x, y)
   } else {
-    win.scrollLeft = x
-    win.scrollTop = y
+    window.scrollLeft = x
+    window.scrollTop = y
   }
 }
 
 function $e(tagName, className) {
-  const element = win.document.createElement(tagName)
+  const element = document.createElement(tagName)
   if (className) {
     element.className = className
   }
@@ -161,33 +136,27 @@ export function alert({
   title = '',
   content = '',
   html = '',
-  buttonText = win.__pd_config.okText,
+  buttonText,
   zIndex,
+  onClose = () => {},
 }) {
-  if (!('document' in win)) {
-    console.log('window is required.')
-    return Promise.resolve()
-  }
   const button = create('button', ['button'], {
-    textContent: buttonText,
+    textContent: buttonText || window.PROMISE_DIALOG_CONFIG.okText,
   })
   const mounter = createWrapper(theme, createHeader({ title, content, html }), [button], zIndex)
-  win.document.body.appendChild(mounter)
+  document.body.appendChild(mounter)
 
   return new Promise(function alertPromise(resolve) {
     button.addEventListener('click', function removeAlert() {
-      win.document.body.removeChild(mounter)
+      document.body.removeChild(mounter)
+      onClose()
       resolve()
     })
   })
 }
 
-export function syncAlert({ onClose = () => {}, ...alertProps }) {
-  if (!('document' in win)) {
-    console.log('window is required.')
-    return
-  }
-  alert(alertProps).then(onClose)
+export function syncAlert(alertProps) {
+  alert(alertProps).then()
 }
 
 export function confirm({
@@ -195,16 +164,18 @@ export function confirm({
   title = '',
   content = '',
   html = '',
-  leftText = win.__pd_config.cancelText,
-  rightText = win.__pd_config.okText,
+  leftText,
+  rightText,
   leftCancel = true,
   zIndex,
+  onOk = () => {},
+  onCancel = () => {},
 }) {
-  if (!('document' in win)) {
-    console.log('window is required.')
-    return Promise.resolve()
-  }
-  const [leftButton, rightButton] = createActions(leftText, rightText, leftCancel)
+  const [leftButton, rightButton] = createActions(
+    leftText || window.PROMISE_DIALOG_CONFIG.cancelText,
+    rightText || window.PROMISE_DIALOG_CONFIG.okText,
+    leftCancel
+  )
 
   const mounter = createWrapper(
     theme,
@@ -212,37 +183,35 @@ export function confirm({
     [leftButton, rightButton],
     zIndex
   )
-  win.document.body.appendChild(mounter)
+  document.body.appendChild(mounter)
 
   return new Promise(function confirmPromise(resolve, reject) {
     leftButton.addEventListener('click', function leftClick() {
-      win.document.body.removeChild(mounter)
+      document.body.removeChild(mounter)
       if (leftCancel) {
+        onCancel()
         reject()
       } else {
+        onOk()
         resolve()
       }
     })
 
     rightButton.addEventListener('click', function rightClick() {
-      win.document.body.removeChild(mounter)
+      document.body.removeChild(mounter)
       if (leftCancel) {
+        onOk()
         resolve()
       } else {
+        onCancel()
         reject()
       }
     })
   })
 }
 
-export function syncConfirm({ onCancel = () => {}, onOk = () => {}, ...confirmProps }) {
-  if (!('document' in win)) {
-    console.log('window is required.')
-    return
-  }
-  confirm(confirmProps)
-    .then(onOk)
-    .catch(onCancel)
+export function syncConfirm(confirmProps) {
+  confirm(confirmProps).then()
 }
 
 export function prompt({
@@ -250,19 +219,20 @@ export function prompt({
   title = '',
   placeholder = '',
   defaultValue = '',
-  leftText = win.__pd_config.cancelText,
-  rightText = win.__pd_config.okText,
+  leftText,
+  rightText,
   leftCancel = true,
   useInput = false,
   zIndex,
   onBlur = () => {},
+  onOk = () => {},
+  onCancel = () => {},
 }) {
-  if (!('document' in win)) {
-    console.log('window is required.')
-    return Promise.resolve()
-  }
-
-  const [leftButton, rightButton] = createActions(leftText, rightText, leftCancel)
+  const [leftButton, rightButton] = createActions(
+    leftText || window.PROMISE_DIALOG_CONFIG.cancelText,
+    rightText || window.PROMISE_DIALOG_CONFIG.okText,
+    leftCancel
+  )
   const input = useInput
     ? create('input', ['input'], {
         type: 'text',
@@ -278,7 +248,7 @@ export function prompt({
     [leftButton, rightButton],
     zIndex
   )
-  win.document.body.appendChild(mounter)
+  document.body.appendChild(mounter)
 
   input.value = defaultValue
   input.focus()
@@ -288,61 +258,53 @@ export function prompt({
   return new Promise(function confirmPromise(resolve, reject) {
     leftButton.addEventListener('click', function leftClick() {
       if (leftCancel) {
+        onCancel()
         reject()
       } else {
+        onOk(input.value)
         resolve(input.value)
       }
-      win.document.body.removeChild(mounter)
+      document.body.removeChild(mounter)
     })
 
     rightButton.addEventListener('click', function rightClick() {
       if (leftCancel) {
+        onOk(input.value)
         resolve(input.value)
       } else {
+        onCancel()
         reject()
       }
-      win.document.body.removeChild(mounter)
+      document.body.removeChild(mounter)
     })
   })
 }
 
-export function syncPrompt({ onCancel = () => {}, onOk = () => {}, ...promptProps }) {
-  if (!('document' in win)) {
-    console.log('window is required.')
-    return
-  }
-  prompt(promptProps)
-    .then(onOk)
-    .catch(onCancel)
+export function syncPrompt(promptProps) {
+  prompt(promptProps).then()
 }
-
-const IconTypes = {
-  success: 'success',
-  warn: 'warn',
-}
-
-const shareMounter = $e('div', $class('mounter'))
-let toastTimer
 
 function clear() {
-  if (!('document' in win)) {
-    console.log('window is required.')
+  const shareMounter = window.PROMISE_DIALOG_CONFIG.PROMISE_DIALOG_SHARE_MOUNTER
+  if (!shareMounter) {
     return
   }
-  if (shareMounter.parentNode === win.document.body) {
-    clearTimeout(toastTimer)
-    win.document.body.removeChild(shareMounter)
+
+  if (shareMounter.parentNode === document.body) {
+    window.clearTimeout(window.PROMISE_DIALOG_CONFIG.TOAST_TIMER)
+    document.body.removeChild(shareMounter)
     if (shareMounter.firstChild) {
       shareMounter.removeChild(shareMounter.firstChild)
     }
   }
 }
 
-export function toast({ title = '', iconType, duration = 2000, zIndex }) {
-  if (!('document' in win)) {
-    console.log('window is required.')
+export function toast({ title = '', iconType, duration = 2000, zIndex, onClose = () => {} }) {
+  const shareMounter = window.PROMISE_DIALOG_CONFIG.PROMISE_DIALOG_SHARE_MOUNTER
+  if (!shareMounter) {
     return Promise.resolve()
   }
+
   clear()
 
   const toaster = create('div', ['toast'], {
@@ -361,29 +323,27 @@ export function toast({ title = '', iconType, duration = 2000, zIndex }) {
   toaster.appendChild(titleNode)
   shareMounter.appendChild(toaster)
 
-  win.document.body.appendChild(shareMounter)
+  document.body.appendChild(shareMounter)
 
   return new Promise(function toastPromise(resolve) {
-    toastTimer = setTimeout(() => {
+    window.PROMISE_DIALOG_CONFIG.TOAST_TIMER = window.setTimeout(() => {
       resolve()
+      onClose()
       clear()
     }, duration)
   })
 }
 
-export function syncToast({ onClose = () => {}, ...toastProps }) {
-  if (!('document' in win)) {
-    console.log('window is required.')
-    return
-  }
-  toast(toastProps).then(onClose)
+export function syncToast(toastProps) {
+  toast(toastProps)
 }
 
 export function loading(config) {
-  if (!('document' in win)) {
-    console.log('window is required.')
+  const shareMounter = window.PROMISE_DIALOG_CONFIG.PROMISE_DIALOG_SHARE_MOUNTER
+  if (!shareMounter) {
     return
   }
+
   let text
   let z
 
@@ -412,9 +372,22 @@ export function loading(config) {
   }
 
   shareMounter.appendChild(loader)
-  win.document.body.appendChild(shareMounter)
+  document.body.appendChild(shareMounter)
 }
 
 export function loaded() {
   clear()
+}
+
+// ssr
+if (typeof window !== 'undefined') {
+  if (!window.PROMISE_DIALOG_CONFIG || !('okText' in window.PROMISE_DIALOG_CONFIG)) {
+    window.PROMISE_DIALOG_CONFIG = {
+      ...PROMISE_DIALOG_CONFIG,
+    }
+  }
+
+  if (!window.PROMISE_DIALOG_CONFIG.PROMISE_DIALOG_SHARE_MOUNTER) {
+    window.PROMISE_DIALOG_CONFIG.PROMISE_DIALOG_SHARE_MOUNTER = $e('div', $class('mounter'))
+  }
 }

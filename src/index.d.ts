@@ -10,6 +10,7 @@ interface AlertConfig {
   html?: string;
   buttonText?: string;
   zIndex?: number;
+  onClose?(): void;
 }
 
 interface ConfirmConfig {
@@ -21,6 +22,8 @@ interface ConfirmConfig {
   rightText?: string;
   leftCancel?: boolean;
   zIndex?: number;
+  onOk?(): void;
+  onCancel?(): void;
 }
 
 interface PromptConfig {
@@ -34,6 +37,8 @@ interface PromptConfig {
   zIndex?: number;
   useInput?: boolean;
   onBlur?: (evt: FocusEvent) => void;
+  onOk?(value: string): void;
+  onCancel?(): void;
 }
 
 interface ToastConfig {
@@ -41,6 +46,7 @@ interface ToastConfig {
   duration?: number;
   zIndex?: number;
   iconType?: 'success' | 'warn';
+  onClose?(): void;
 }
 
 interface LoadingConfig {
@@ -51,12 +57,12 @@ interface LoadingConfig {
 export function setConfig(config: ConfigType): void;
 export function scrollBack(x?: number, y?: number): void;
 export function alert(config: AlertConfig): Promise<void>;
-export function syncAlert(config: AlertConfig & { onClose?(): void }): void;
+export function syncAlert(config: AlertConfig): void;
 export function confirm(config: ConfirmConfig): Promise<void>;
-export function syncConfirm(config: ConfirmConfig & { onOk?(): void; onCancel?(): void }): void;
+export function syncConfirm(config: ConfirmConfig): void;
 export function prompt(config: PromptConfig): Promise<string>;
-export function syncPrompt(config: PromptConfig & { onOk?(value: string): void; onCancel?(): void }): void;
+export function syncPrompt(config: PromptConfig): void;
 export function toast(config: ToastConfig): Promise<void>;
-export function syncToast(config: ToastConfig & { onClose?(): void } ): void;
+export function syncToast(config: ToastConfig): void;
 export function loading(config: LoadingConfig | string): void;
 export function loaded(): void;
