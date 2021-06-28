@@ -277,6 +277,7 @@ export function prompt(promptConfig) {
     title = '',
     placeholder = '',
     defaultValue = '',
+    maxLength,
     leftText,
     rightText,
     leftCancel = true,
@@ -297,10 +298,12 @@ export function prompt(promptConfig) {
     ? create('input', [classes.input], {
         type: 'text',
         placeholder: placeholder || title || '',
+        maxLength,
       })
     : create('textarea', [classes.textarea, classes.input], {
         placeholder: placeholder || title || '',
         rows: 3,
+        maxLength,
       })
   const mounter = createWrapper(
     theme,

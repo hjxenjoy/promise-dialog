@@ -94,8 +94,9 @@ function testPrompt(isAsync, useInput = false) {
   const props = {
     theme: isDark ? 'pd-dark' : undefined,
     title: 'Hello Prompt',
-    placeholder: 'Please Enter Something...',
-    defaultValue: 'Default Values...',
+    placeholder: `Please Enter (in ${useInput ? 20 : 50} characters)`,
+    defaultValue: useInput ? '' : 'Default Values...',
+    maxLength: useInput ? 20 : 50,
     useInput,
     onBlur() {
       pd.scrollBack(0, 0)

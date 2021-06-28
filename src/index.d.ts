@@ -71,6 +71,7 @@ interface PromptConfig {
   title?: string;
   placeholder?: string;
   defaultValue?: string;
+  maxLength?: number
   leftText?: string;
   rightText?: string;
   leftCancel?: boolean;
