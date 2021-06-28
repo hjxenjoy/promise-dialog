@@ -1,6 +1,46 @@
+interface ClassNameConfig {
+  /** default: promise-dialog__root */
+  root: string
+  /** default: promise-dialog__button */
+  button: string
+  /** default: promise-dialog__ok */
+  okButton: string
+  /** default: promise-dialog__cancel */
+  cancelButton: string
+  /** default: promise-dialog__title */
+  title: string
+  /** default: promise-dialog__content */
+  content: string
+  /** default: promise-dialog__html */
+  html: string
+  /** default: promise-dialog__layer */
+  layer: string
+  /** default: promise-dialog__dialog */
+  dialog: string
+  /** default: promise-dialog__body */
+  body: string
+  /** default: promise-dialog__actions */
+  actions: string
+  /** default: promise-dialog__input */
+  input: string
+  /** default: promise-dialog__textarea */
+  textarea: string
+  /** default: promise-dialog__loading */
+  loading: string
+  /** default: promise-dialog__loadingIcon */
+  loadingIcon: string
+  /** default: promise-dialog__control */
+  control: string
+  /** default: promise-dialog__toast */
+  toast: string
+  /** default: promise-dialog__toastIcon */
+  toastIcon: string
+}
+
 type ConfigType = {
   okText: string;
   cancelText: string
+  classes?: ClassNameConfig
 }
 
 interface AlertConfig {

@@ -12,7 +12,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-body.dark {
+.dark {
   color: #EEE;
   background-color: #122;
 }
@@ -75,20 +75,20 @@ body.dark {
   background-color: #155a38;
 }
 
-.promise-dialog__dark .promise-dialog__dialog {
+.promise-dialog__pd-dark .promise-dialog__dialog {
   background-color: #333;
   color: #EEE;
 }
 
-.promise-dialog__dark .promise-dialog__actions {
+.promise-dialog__pd-dark .promise-dialog__actions {
   border-top-color: #999;
 }
 
-.promise-dialog__dark .promise-dialog__content {
+.promise-dialog__pd-dark .promise-dialog__content {
   color: #ccc;
 }
 
-.promise-dialog__dark .promise-dialog__input {
+.promise-dialog__pd-dark .promise-dialog__input {
   background-color: #666;
   border-color: #777;
 }
