@@ -200,6 +200,7 @@ export function alert(alertProps) {
   })
   const mounter = createWrapper(theme, createHeader({ title, content, html }), [button], zIndex)
   document.body.appendChild(mounter)
+  button.focus()
 
   return new Promise(function alertPromise(resolve) {
     button.addEventListener('click', function removeAlert() {
@@ -241,6 +242,7 @@ export function confirm(confirmProps) {
     zIndex
   )
   document.body.appendChild(mounter)
+  ;(leftCancel ? rightButton : leftButton).focus()
 
   return new Promise(function confirmPromise(resolve, reject) {
     leftButton.addEventListener('click', function leftClick() {
