@@ -314,11 +314,22 @@ export function prompt(promptConfig) {
   document.body.appendChild(mounter)
 
   input.value = defaultValue
-  input.focus()
+  input.select()
 
   input.addEventListener('blur', onBlur)
 
   return new Promise(function confirmPromise(resolve, reject) {
+    if (useInput) {
+      input.addEventListener('keydown', function handleOk(evt) {
+        if (/enter/i.test(evt.code)) {
+          evt.preventDefault()
+          const { value } = input
+          onOk(value)
+          resolve(value)
+          document.body.removeChild(mounter)
+        }
+      })
+    }
     leftButton.addEventListener('click', function leftClick() {
       if (leftCancel) {
         onCancel()
